@@ -7,6 +7,7 @@ import authRoutes from "./routes/authRoutes.js";
 import balanceRoutes from "./routes/balanceRoutes.js";
 import transactionRoutes from "./routes/transactionRoutes.js";
 import { swaggerDocs } from "./swagger.js"; // Swagger integration
+import informationRouter from "./routes/informationRouter.js";
 
 // Load environment variables
 dotenv.config();
@@ -25,6 +26,7 @@ app.use(bodyParser.json());
 app.use("/auth", authRoutes);
 app.use("/balance", balanceRoutes);
 app.use("/transaction", transactionRoutes);
+app.use("/information", informationRouter);
 
 // Set port from environment variables, default to 5001
 const PORT = process.env.PORT || 5001;

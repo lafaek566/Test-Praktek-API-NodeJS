@@ -58,6 +58,50 @@ export const pay = async (req, res) => {
   );
 };
 
+// Fungsi untuk melakukan topup saldo pengguna
+export const topUp = async (req, res) => {
+  const token = req.headers["authorization"];
+
+  if (!token) {
+    return res.status(401).json({ message: "Authorization required" });
+  }
+
+  // Hapus "Bearer " dari token jika ada
+  const tokenWithoutBearer = token.startsWith("Bearer ")
+    ? token.slice(7)
+    : token;
+
+  jwt.verify(
+    tokenWithoutBearer,
+    process.env.JWT_SECRET,
+    async (err, decoded) => {
+      if (err) {
+        return res.status(401).json({ message: "Invalid token" });
+      }
+
+      const userId = decoded.id; // ID pengguna dari token JWT
+      const { amount } = req.body; // Mengambil amount dari body request
+
+      if (!amount || amount <= 0) {
+        return res.status(400).json({ message: "Invalid top-up amount" });
+      }
+
+      try {
+        // Update saldo pengguna
+        await db.query("UPDATE users SET balance = balance + ? WHERE id = ?", [
+          amount,
+          userId,
+        ]);
+
+        // Kirim response sukses
+        res.json({ message: `Top-up of ${amount} successful` });
+      } catch (error) {
+        res.status(500).json({ message: error.message });
+      }
+    }
+  );
+};
+
 // Fungsi untuk mengambil histori transaksi pengguna
 export const getTransactions = async (req, res) => {
   const token = req.headers["authorization"];

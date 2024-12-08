@@ -1,5 +1,9 @@
 import express from "express";
-import { pay, getTransactions } from "../controllers/transactionController.js";
+import {
+  pay,
+  getTransactions,
+  topUp,
+} from "../controllers/transactionController.js";
 import authenticate from "../middleware/authenticate.js"; // Ensure this is implemented for protecting routes
 
 const router = express.Router();
@@ -35,6 +39,35 @@ const router = express.Router();
  *         description: Server error
  */
 router.post("/pay", authenticate, pay);
+
+/**
+ * @swagger
+ * /transaction/topup:
+ *   post:
+ *     summary: Top-up user balance
+ *     security:
+ *       - Bearer: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               amount:
+ *                 type: number
+ *                 example: 100
+ *     responses:
+ *       200:
+ *         description: Top-up successful
+ *       400:
+ *         description: Invalid top-up amount
+ *       401:
+ *         description: Unauthorized (Invalid token)
+ *       500:
+ *         description: Server error
+ */
+router.post("/topup", authenticate, topUp);
 
 /**
  * @swagger
