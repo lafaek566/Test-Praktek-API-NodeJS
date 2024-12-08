@@ -12,7 +12,7 @@ const options = {
     },
     servers: [
       {
-        url: "http://localhost:5001", // Your server URL
+        url: "https://test-praktek-api-nodejs-production.up.railway.app", // Your server URL
       },
     ],
     components: {
